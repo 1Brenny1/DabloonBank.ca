@@ -47,15 +47,22 @@
                 const { username, discriminator, avatar, id} = response;
                 document.getElementById("user").innerHTML = `${username}#${discriminator}`;
                 document.getElementById("icon").src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`
-
-                console.log(`https://bot.dabloonbank.ca/?userid=${id}`);
+                
+                console.log(`https://api.dabloonbank.ca/?userid=${id}`);
                 const Http = new XMLHttpRequest();
-                const url=`https://bot.dabloonbank.ca/?userid=${id}`;
+                const url=`https://api.dabloonbank.ca/?userid=${id}`;
                 Http.open("GET", url);
                 Http.send();
 
                 Http.onreadystatechange = (e) => {
-                console.log(Http.responseText)
+                    const RawData = Http.responseText
+                    if (RawData != "Error") {
+                        const Data = JSON.parse(RawData);
+                        console.log(Data);
+                        document.getElementById("balance").innerHTML = Data.Dabloons;
+                    } else {
+                        alert("Woops! An error occured.");
+                    }
                 }
           })
           .catch(console.error);
