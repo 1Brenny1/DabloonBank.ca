@@ -22,26 +22,41 @@
             <a href="../discord">Discord</a>
         </nav>
     </header>
-    <h1 id="welcome">Welcome null to the dashboard</h1>
+    <h1>Welcome <img id="icon" style="width: 30px; height: 30px; margin: 0; border-radius: 100%;"> <span id="user">User</span></h1>
+    <h2>Balance</h2>
+    <blockquote>
+        <span id="balance">0</span> Dabloons
+    </blockquote>
     <script>
         window.onload = () => {
-          const fragment = new URLSearchParams(window.location.hash.slice(1));
-          const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
+            const fragment = new URLSearchParams(window.location.hash.slice(1));
+            const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
       
-          if (!accessToken) {
-              location.href = "../home"
-          }
+            if (!accessToken) {
+                //location.href = "../home"
+            }
       
-          fetch('https://discord.com/api/users/@me', {
-          headers: {
-              authorization: `${tokenType} ${accessToken}`,
-          },
-          })
-          .then(result => result.json())
-          .then(response => {
-              console.log(response);
-              const { username, discriminator, avatar, id} = response;
-              document.getElementById("welcome").innerHTML = `Welcome ${username} to the dashboard!`;
+            fetch('https://discord.com/api/users/@me', {
+            headers: {
+                authorization: `${tokenType} ${accessToken}`,
+            },
+            })
+            .then(result => result.json())
+            .then(response => {
+                console.log(response);
+                const { username, discriminator, avatar, id} = response;
+                document.getElementById("user").innerHTML = `${username}#${discriminator}`;
+                document.getElementById("icon").src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`
+
+                console.log(`https://bot.dabloonbank.ca/?userid=${id}`);
+                const Http = new XMLHttpRequest();
+                const url=`https://bot.dabloonbank.ca/?userid=${id}`;
+                Http.open("GET", url);
+                Http.send();
+
+                Http.onreadystatechange = (e) => {
+                console.log(Http.responseText)
+                }
           })
           .catch(console.error);
       
