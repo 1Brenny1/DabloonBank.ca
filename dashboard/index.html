@@ -23,17 +23,28 @@
         </nav>
     </header>
     <h1>Welcome <img id="icon" style="width: 30px; height: 30px; margin: 0; border-radius: 100%;"> <span id="user">User</span></h1>
+    <hr style="margin-bottom: 5px; height: 5px; background-color: #222222;">
     <h2>Balance</h2>
     <blockquote>
         <span id="balance">0</span> Dabloons
     </blockquote>
+    <h2>Transactions</h2>
+    <blockquote id="transactions">
+        
+    </blockquote>
     <script>
         window.onload = () => {
+            const SetData = false;
+
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
       
             if (!accessToken) {
-                //location.href = "../home"
+                if (!location.href.includes("127.0.0.1:3000")) {
+                    location.href = "https://discord.com/api/oauth2/authorize?client_id=1054507742502596628&redirect_uri=https%3A%2F%2FDabloonBank.ca%2Fdashboard%2F&response_type=token&scope=identify"
+                } else {
+                    return;
+                }
             }
       
             fetch('https://discord.com/api/users/@me', {
@@ -48,18 +59,30 @@
                 document.getElementById("user").innerHTML = `${username}#${discriminator}`;
                 document.getElementById("icon").src = `https://cdn.discordapp.com/avatars/${id}/${avatar}.jpg`
                 
-                console.log(`https://api.dabloonbank.ca/?userid=${id}`);
                 const Http = new XMLHttpRequest();
                 const url=`https://api.dabloonbank.ca/?userid=${id}`;
                 Http.open("GET", url);
                 Http.send();
-
+                
+                
                 Http.onreadystatechange = (e) => {
                     const RawData = Http.responseText
+                    if (SetData) {
+                        return;
+                    }
                     if (RawData != "Error") {
+                        SetData = true;
                         const Data = JSON.parse(RawData);
-                        console.log(Data);
                         document.getElementById("balance").innerHTML = Data.Dabloons;
+
+                        for(transaction in Data.Transactions) {
+                            if (transaction.Type == "Send") {
+                                document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons sent to ${transaction.Recipient_Tag} (${transaction.Recipient}) at ${transaction.Time}</pre>`
+                            } else {
+                                document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons recieved from ${transaction.Sender_Tag} (${transaction.Sender}) at ${transaction.Time}</pre>`
+                            }
+                            console.log(transaction);
+                        }
                     } else {
                         alert("Woops! An error occured.");
                     }
