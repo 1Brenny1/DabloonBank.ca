@@ -34,7 +34,6 @@
     </blockquote>
     <script>
         window.onload = () => {
-            SetData = false;
 
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
@@ -67,11 +66,7 @@
                 
                 Http.onreadystatechange = (e) => {
                     const RawData = Http.responseText
-                    if (SetData) {
-                        return;
-                    }
                     if (RawData != "Error") {
-                        SetData = true;
                         const Data = JSON.parse(RawData);
                         document.getElementById("balance").innerHTML = Data.Dabloons;
 
