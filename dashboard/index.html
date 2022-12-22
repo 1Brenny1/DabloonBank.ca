@@ -77,20 +77,21 @@
                         const Data = JSON.parse(RawData);
                         document.getElementById("balance").innerHTML = Data.Dabloons;
 
-                        for(transaction in Data.Transactions) {
+                        Data.Transactions.forEach((transaction) => {
                             if (transaction.Type == "Send") {
                                 document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons sent to ${transaction.Recipient_Tag} (${transaction.Recipient}) at ${transaction.Time}</pre>`
                             } else {
                                 document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons recieved from ${transaction.Sender_Tag} (${transaction.Sender}) at ${transaction.Time}</pre>`
                             }
-                            console.log(transaction);
-                        }
+                        });
                     } else {
                         alert("Woops! An error occured.");
                     }
                 }
           })
-          .catch(console.error);
+          .catch(() => {
+            location.href = "https://discord.com/api/oauth2/authorize?client_id=1054507742502596628&redirect_uri=https%3A%2F%2FDabloonBank.ca%2Fdashboard%2F&response_type=token&scope=identify";
+          });
       
       
       };
