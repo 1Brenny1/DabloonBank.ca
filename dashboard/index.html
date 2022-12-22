@@ -20,6 +20,8 @@
             <a href="../add_bot">Add Bot</a>
             /
             <a href="../discord">Discord</a>
+            /
+            <a href="../dashboard">Dashboard</a>
         </nav>
     </header>
     <h1>Welcome <img id="icon" style="width: 30px; height: 30px; margin: 0; border-radius: 100%;"> <span id="user">User</span></h1>
@@ -36,14 +38,19 @@
         window.onload = () => {
 
             const fragment = new URLSearchParams(window.location.hash.slice(1));
-            const [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
-      
-            if (!accessToken) {
+            [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
+            if (!accessToken && localStorage.getItem("access_token") === null) {
                 if (!location.href.includes("127.0.0.1:3000")) {
                     location.href = "https://discord.com/api/oauth2/authorize?client_id=1054507742502596628&redirect_uri=https%3A%2F%2FDabloonBank.ca%2Fdashboard%2F&response_type=token&scope=identify"
                 } else {
                     return;
                 }
+            } else if (accessToken) {
+                localStorage.setItem("access_token", accessToken);
+                localStorage.setItem("token_type", tokenType);
+            } else {
+                accessToken = localStorage.getItem("access_token")
+                tokenType = localStorage.getItem("token_type");
             }
       
             fetch('https://discord.com/api/users/@me', {
