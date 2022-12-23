@@ -39,7 +39,6 @@
     </blockquote>
     <script>
         window.onload = () => {
-            LoadedTransactions = false
             const fragment = new URLSearchParams(window.location.hash.slice(1));
             [accessToken, tokenType] = [fragment.get('access_token'), fragment.get('token_type')];
             if (!accessToken && localStorage.getItem("access_token") === null) {
@@ -79,16 +78,13 @@
                     if (RawData !== "Error") {
                         const Data = JSON.parse(RawData);
                         document.getElementById("balance").innerHTML = Data.Dabloons;
-                        if (!LoadedTransactions) {
-                            Data.Transactions.forEach((transaction) => {
-                                if (transaction.Type == "Send") {
-                                    document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons sent to ${transaction.Recipient_Tag} (${transaction.Recipient}) at ${transaction.Time}</pre>`
-                                } else {
-                                    document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons recieved from ${transaction.Sender_Tag} (${transaction.Sender}) at ${transaction.Time}</pre>`
-                                }
-                            });
-                            LoadedTransactions = true;
-                        }
+                        Data.Transactions.forEach((transaction) => {
+                            if (transaction.Type == "Send") {
+                                document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons sent to ${transaction.Recipient_Tag} (${transaction.Recipient}) at ${transaction.Time}</pre>`
+                            } else {
+                                document.getElementById("transactions").innerHTML += `<pre style="padding: 0 0 0 5px;">${transaction.Amount} Dabloons recieved from ${transaction.Sender_Tag} (${transaction.Sender}) at ${transaction.Time}</pre>`
+                            }
+                        });
                     } else {
                         alert("Woops! An error occured.");
                     }
