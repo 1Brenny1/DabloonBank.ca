@@ -76,7 +76,7 @@
                 
                 Http.onreadystatechange = (e) => {
                     const RawData = Http.responseText
-                    if (RawData != "Error") {
+                    if (RawData !== "Error") {
                         const Data = JSON.parse(RawData);
                         document.getElementById("balance").innerHTML = Data.Dabloons;
                         if (!LoadedTransactions) {
